@@ -22,7 +22,7 @@
                 <a href="/questions/<%= question._id %>"></a> <%= question.title %>
             </td>
             <td>
-                <%= question.createdAt %>
+                <%= moment(question.createdAt).format('MMMM Do YYYY, h:mm a') %>
             </td>
             <td></td>
         </tr>

@@ -1,0 +1,34 @@
+<%- include('../partials/header') -%>
+<h1>Questions</h1>
+<div class="row">
+    <% if (questions.length) { %>
+    <% questions.forEach(function(question){ %>
+    <div class="col s12 m4">
+        <div class="card">
+            <div class="card-image">
+                <!-- Add icon later -->
+            </div>
+            <div class="card-content center-align">
+                <h5><%=question.title%></h5>
+                <p><%=question.body%></p>
+                <br>
+                <div class="chip">
+                    <% if (question.mode!=="anonymous"){ %>
+                    <img src=<%=question.user.image%> alt="">
+                    <a href="/questions/user/<%=question.user._id%>"><%=question.user.displayName%></a>
+                    <% }else { %>
+                    <a href="#">Anonymous</a>
+                    <% } %>
+                </div>
+            </div>
+            <div class="card-action center-align">
+                <a href="/stories/<%=question._id%>" class="btn grey">Read more</a>
+            </div>
+        </div>
+    </div>
+    <% }) %>
+    <% }else{ %>
+    <p>No questions to display</p>
+    <% } %>
+</div>
+<%- include('../partials/footer') -%>

@@ -24,4 +24,20 @@ router.post("/", ensureAuth, async (req, res) => {
   }
 });
 
+// @desc    Show all questions
+// @route   GET /questions
+router.get("/", ensureAuth, async (req, res) => {
+  try {
+    const questions = await Question.find({})
+      .populate("user")
+      .sort({ createdAt: "desc" })
+      .lean();
+    res.render("questions/index", {
+      questions: questions,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 module.exports = router;

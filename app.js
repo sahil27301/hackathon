@@ -24,6 +24,10 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+// Date formatting
+var moment = require("moment");
+app.locals.moment = require("moment");
+
 const PORT = process.env.PORT || 3000;
 
 app.set("view engine", "ejs");
