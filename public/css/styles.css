@@ -7,3 +7,20 @@ p {
   margin-top: 50px;
   text-align: center;
 }
+
+.sidenav {
+  background-color: #bedcfa;
+  background-image: linear-gradient(#bedcfa, #0278ae);
+}
+
+body {
+  font-family: "Raleway", sans-serif;
+}
+
+a.brand-logo {
+  font-size: 400%;
+}
+
+.nav {
+  background-color: #0278ae;
+}

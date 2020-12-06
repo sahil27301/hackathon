@@ -11,4 +11,17 @@ const Question = require("../models/Question");
 router.get("/add", ensureAuth, (req, res) => {
   res.render("questions/add");
 });
+
+// @desc    Process the add form
+// @route   POST /questions
+router.post("/", ensureAuth, async (req, res) => {
+  try {
+    req.body.user = req.user.id;
+    await Question.create(req.body);
+    res.redirect("/dashboard");
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 module.exports = router;
