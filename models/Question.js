@@ -29,6 +29,11 @@ const QuestionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectID,
     ref: "User",
   },
+  mode: {
+    type: String,
+    default: "normal",
+    enum: ["normal", "anonymous"],
+  },
   createdAt: {
     type: Date,
     default: Date.now,
