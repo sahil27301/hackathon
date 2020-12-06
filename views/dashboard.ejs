@@ -1,4 +1,33 @@
 <%- include("partials/header") -%>
-<h1>dashboard</h1>
-<h3>welcome <%= name %> </h3>
+<h3>dashboard</h3>
+<h1>welcome <%= name %> </h1>
+<p>Here are your questions.</p>
+
+<% if (questions.length) { %>
+
+<table class="striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% questions.forEach(function(question){ %>
+        <tr>
+            <td>
+                <a href="/questions/<%= question._id %>"></a> <%= question.title %>
+            </td>
+            <td>
+                <%= question.createdAt %>
+            </td>
+            <td></td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<% } else { %>
+<p>You have not posted any questions yet.</p>
+<% } %>
 <%- include("partials/footer") -%>

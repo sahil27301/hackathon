@@ -45,14 +45,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.get("/", function (req, res) {
-//   res.render("home");
-// });
-
-// Routes
-
 app.use("/", require("./routes/index"));
 app.use("/auth", require("./routes/auth"));
+app.use("/questions", require("./routes/questions"));
 
 app.listen(process.env.PORT || 3000, function () {
   console.log(
