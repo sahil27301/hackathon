@@ -24,3 +24,11 @@ a.brand-logo {
 .nav {
   background-color: #0278ae;
 }
+
+.fa-small {
+  font-size: 16px !important;
+}
+
+.fa-bars {
+  font-size: 50px;
+}

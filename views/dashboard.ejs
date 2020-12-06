@@ -24,6 +24,7 @@
             <td>
                 <%= moment(question.createdAt).format('MMMM Do YYYY, h:mm a') %>
             </td>
+            <td><span class="dash-mode"><%= question.mode %></span></td>
             <td></td>
         </tr>
         <% }) %>

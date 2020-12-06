@@ -6,11 +6,11 @@
     <div class="col s12 m4">
         <div class="card">
             <div class="card-image">
-                <!-- Add icon later -->
+                <%- editIcon(question.user, currentUser, question._id) %>
             </div>
             <div class="card-content center-align">
                 <h5><%=question.title%></h5>
-                <p><%=question.body%></p>
+                <p><%- truncate(stripTags(question.body), 150) %></p>
                 <br>
                 <div class="chip">
                     <% if (question.mode!=="anonymous"){ %>
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="card-action center-align">
-                <a href="/stories/<%=question._id%>" class="btn grey">Read more</a>
+                <a href="/questions/<%=question._id%>" class="btn grey">Read more</a>
             </div>
         </div>
     </div>
