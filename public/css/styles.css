@@ -32,3 +32,16 @@ a.brand-logo {
 .fa-bars {
   font-size: 50px;
 }
+
+.btn-float {
+  float: left;
+  margin-right: 10px;
+}
+
+.img-small {
+  width: 180px;
+}
+
+.stupidForm {
+  margin: 75px;
+}

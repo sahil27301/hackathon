@@ -1,9 +1,7 @@
 <%- include('../partials/header') -%>
-<div class="row">
-    <div class="input-field">
-        <input type="text" id="title" name="title" maxlength="50" autocomplete="off">
-        <label for="title">Start typing here to search</label>
-    </div>
+<div class="center">
+    <img src="<%=questions[0].user.image%>" alt="profile-image" class="responsive-img circle">
+    <h2><%=questions[0].user.displayName%></h2>
 </div>
 <h1>Questions</h1>
 <div class="row">
@@ -37,23 +35,4 @@
     <p>No questions to display</p>
     <% } %>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
-    integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
-    crossorigin="anonymous"></script>
-<script>
-    document.querySelector("#title").addEventListener("input", function () {
-        var input = this.value;
-        $(".card-content h5").each(function () {
-            if (input.trim().length === 0) {
-                $(this).parent().parent().parent().show(700);
-            } else {
-                if (this.innerHTML.toLowerCase().split('.').join('').replace(/\s/g, '').includes(input.toLowerCase().replace(/\s/g, '').split('.').join(''))) {
-                    $(this).parent().parent().parent().show(700);
-                } else {
-                    $(this).parent().parent().parent().hide(700);
-                }
-            }
-        });
-    });
-</script>
 <%- include('../partials/footer') -%>

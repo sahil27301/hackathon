@@ -1,11 +1,12 @@
 <%- include("../partials/header") -%>
 
-<h3>Ask A Question</h3>
+<h3>Edit Question</h3>
 <div class="row">
-    <form action="/questions" method="POST" class="col s12">
+    <form action="/questions/<%= question._id %>" method="POST" class="col s12">
+        <input type="hidden" name="_method" value="PUT">
         <div class="row">
             <div class="input-field">
-                <input type="text" id="title" name="title" maxlength="100" autocomplete="off">
+                <input type="text" id="title" name="title" value="<%= question.title %>">
                 <label for="title">Keep the title concise to help others find your question easily (100 characters
                     max)</label>
             </div>
@@ -13,25 +14,26 @@
 
         <div class="row">
             <div class="input-field">
-                <h5>Have a doubt? Ask away!</h5>
-                <textarea id="body" name="body"></textarea>
+                <h5>Have a doubt? Ask away!:</h5>
+                <textarea id="body" name="body"><%= question.body %></textarea>
             </div>
         </div>
 
         <div class="row">
             <div class="input-field">
                 <label for="mode">
-                    <input type="checkbox" id="mode" class="filled-in" value="anonymous" name="mode" />
+                    <input type="checkbox" id="mode" class="filled-in" value="anonymous" name="mode"
+                        <% if (question.mode=="anonymous") { %> <%- checked="checked" %> <% } %> />
                     <span>Post Anonymously</span>
                 </label>
             </div>
         </div>
 
         <div class="row right">
-            <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+            <button class="btn waves-effect waves-light" type="submit" name="action">Save
                 <i class="fas fa-paper-plane right"></i>
             </button>
-            <a href="/dashboard" class="btn red">Discard <i class="far fa-times-circle right"></i></a>
+            <a href="/dashboard" class="btn red">Cancel <i class="far fa-times-circle right"></i></a>
         </div>
     </form>
 </div>
