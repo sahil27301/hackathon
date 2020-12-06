@@ -1,23 +1,58 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const connectDB = require("./config/db");
+const morgan = require("morgan");
+const path = require("path");
+const passport = require("passport");
+const session = require("express-session");
+
+// Load config
+dotenv.config({ path: "./config/config.env" });
+
+// passport config
+require("./config/passport")(passport);
+
+connectDB();
 
 const app = express();
+
+// Logging
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
+
+const PORT = process.env.PORT || 3000;
 
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(path.join(__dirname, "public")));
 
-mongoose.connect("mongodb://localhost:27017/hackathonDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// Sessions
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
-app.get("/", function (req, res) {
-  res.render("home");
-});
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// app.get("/", function (req, res) {
+//   res.render("home");
+// });
+
+// Routes
+
+app.use("/", require("./routes/index"));
+app.use("/auth", require("./routes/auth"));
 
 app.listen(process.env.PORT || 3000, function () {
-  console.log("Server started on port 3000");
+  console.log(
+    `Server started with mode ${process.env.NODE_ENV} on port ${process.env.PORT}`
+  );
 });
