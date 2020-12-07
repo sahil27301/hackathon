@@ -45,3 +45,7 @@ a.brand-logo {
 .stupidForm {
   margin: 75px;
 }
+
+strong {
+  font-weight: bold;
+}
