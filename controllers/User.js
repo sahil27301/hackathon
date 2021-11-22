@@ -47,6 +47,22 @@ class UserController {
       console.log(err);
     }
   }
+
+  static async getDashboard(req, res) {
+    try {
+      const questions = await UserController.fetchPosts(req.user.id);
+      res.render("dashboard", {
+        name: req.user.firstName,
+        questions: questions,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  static async getLogin(_req, res) {
+    res.render("login");
+  }
 }
 
 module.exports = UserController;

@@ -4,26 +4,14 @@ const router = express.Router();
 
 const { ensureAuth, ensureGuest } = require("../middleware/auth");
 
-const Question = require("../models/Question");
+const UserController = require("../controllers/User");
 
 // @desc    Login/Landing page
 // @route   GET /
-router.get("/", ensureGuest, (req, res) => {
-  res.render("login");
-});
+router.get("/", ensureGuest, UserController.getLogin);
 
 // @desc    Dashboard
 // @route   GET /dasboard
-router.get("/dashboard", ensureAuth, async (req, res) => {
-  try {
-    const questions = await Question.find({ user: req.user.id }).lean();
-    res.render("dashboard", {
-      name: req.user.firstName,
-      questions: questions,
-    });
-  } catch (err) {
-    console.log(err);
-  }
-});
+router.get("/dashboard", ensureAuth, UserController.getDashboard);
 
 module.exports = router;
