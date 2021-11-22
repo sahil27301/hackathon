@@ -1,7 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const morgan = require("morgan");
 const path = require("path");
 const passport = require("passport");
 const session = require("express-session");

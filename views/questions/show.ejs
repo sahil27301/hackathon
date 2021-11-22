@@ -1,58 +1,74 @@
 <%- include("../partials/header") -%>
-<div class="row">
     <div class="row">
-        <div class="col s12 m8">
-            <h3><%= question.title %>
-                <small><%- editIcon(question.user, currentUser, question._id, false) %></small>
-            </h3>
-            <div class="card question">
-                <div class="card-content">
-                    <span class="card-title"><%= moment(question.createdAt).format('MMMM Do YYYY, h:mm a') %></span>
-                    <%- question.body %>
-                </div>
-            </div>
-        </div>
-        <div class="col s12 m4">
-            <div class="card center-align">
-                <div class="card-content">
-                    <% if (question.mode != "anonymous") { %>
-                    <span class="card-title"><%= question.user.displayName %></span>
-                    <img src="<%= question.user.image %>" class="circle responsive-img img-small">
-                    <% }else{ %>
-                    <span class="card-title">anonymous</span>
-                    <% } %>
-                </div>
-                <% if (question.mode != "anonymous") { %>
-                <div class="card-action">
-                    <a href="/questions/user/<%= question.user._id %>">More From <%= question.user.firstName %></a>
-                </div>
-                <% } %>
-            </div>
-        </div>
-    </div>
-    <form action="/questions/<%= question._id %>" method="POST" class="stupidForm">
         <div class="row">
-            <div class="input-field">
-                <h5>Post a comment</h5>
-                <textarea id="body" name="body"></textarea>
+            <div class="col s12 m8">
+                <h3>
+                    <%= question.title %>
+                        <small>
+                            <%- editIcon(question.user, currentUser, question._id, false) %>
+                        </small>
+                </h3>
+                <div class="card question">
+                    <div class="card-content">
+                        <span class="card-title">
+                            <%= moment(question.createdAt).format('MMMM Do YYYY, h:mm a') %>
+                        </span>
+                        <%- question.body %>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="card center-align">
+                    <div class="card-content">
+                        <% if (question.mode !="anonymous" ) { %>
+                            <span class="card-title">
+                                <%= question.user.displayName %>
+                            </span>
+                            <img src="<%= question.user.image %>" class="circle responsive-img img-small">
+                            <% }else{ %>
+                                <span class="card-title">anonymous</span>
+                                <% } %>
+                    </div>
+                    <% if (question.mode !="anonymous" ) { %>
+                        <div class="card-action">
+                            <a href="/questions/user/<%= question.user._id %>">More From <%= question.user.firstName %>
+                            </a>
+                        </div>
+                        <% } %>
+                </div>
             </div>
         </div>
-        <div class="row right">
-            <button class="btn waves-effect waves-light" type="submit" name="action">Submit
-                <i class="fas fa-paper-plane right"></i>
-            </button>
-        </div>
-    </form>
+        <form action="/questions/<%= question._id %>" method="POST" class="stupidForm">
+            <div class="row">
+                <div class="input-field">
+                    <h5>Post a comment</h5>
+                    <textarea id="body" name="body"></textarea>
+                </div>
+            </div>
+            <div class="row right">
+                <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                    <i class="fas fa-paper-plane right"></i>
+                </button>
+            </div>
+        </form>
 
 
-    <%question.replies.forEach(function(reply){%>
-    <div class="card question">
+        <%question.replies.forEach(function(reply){%>
+            <div class="card question">
 
-        <div class="card-content">
-            <span class="card-title"><%= reply.displayName %></span>
-            <span><%= moment(reply.createdAt).format('MMMM Do YYYY, h:mm a') %></span>
-            <%- reply.body %>
-        </div>
-    </div>
-    <%});%>
-    <%- include("../partials/footer") -%>
+                <div class="card-content">
+                    <span class="card-title">
+                        <%= reply.displayName %>
+
+                            <small>
+                                <%- editCommentIcon(reply.user, currentUser, question._id, false, reply._id) %>
+                            </small>
+                    </span>
+                    <span>
+                        <%= moment(reply.createdAt).format('MMMM Do YYYY, h:mm a') %>
+                    </span>
+                    <%- reply.body %>
+                </div>
+            </div>
+            <%});%>
+                <%- include("../partials/footer") -%>

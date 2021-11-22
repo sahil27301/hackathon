@@ -49,3 +49,7 @@ a.brand-logo {
 strong {
   font-weight: bold;
 }
+
+.inline-form {
+  display: inline-block;
+}

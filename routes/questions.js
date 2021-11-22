@@ -8,12 +8,37 @@ const Question = require("../models/Question");
 const User = require("../models/User");
 
 editIcon = function (questionUser, loggedUser, questionId, floating = true) {
-  if (questionUser._id.toString() == loggedUser._id.toString()) {
+  if (
+    questionUser._id.toString() == loggedUser._id.toString() ||
+    loggedUser.isAdmin
+  ) {
     if (floating) {
       return `<a href="/questions/edit/${questionId}" class="btn-floating halfway-fab blue"><i class="fas fa-edit fa-small"></i></a>`;
       // return `<a href="google.com">lol</a>`;
     } else {
       return `<a href="/questions/edit/${questionId}"><i class="fas fa-edit"></i></a>`;
+    }
+  } else {
+    return "";
+  }
+};
+
+editCommentIcon = function (
+  commentUser,
+  loggedUser,
+  questionId,
+  floating = true,
+  commentId
+) {
+  if (
+    commentUser._id.toString() == loggedUser._id.toString() ||
+    loggedUser.isAdmin
+  ) {
+    if (floating) {
+      return `<a href="/questions/edit/${questionId}/comment/${commentId}" class="btn-floating halfway-fab blue"><i class="fas fa-edit fa-small"></i></a>`;
+      // return `<a href="google.com">lol</a>`;
+    } else {
+      return `<a href="/questions/edit/${questionId}/comment/${commentId}"><i class="fas fa-edit"></i></a>`;
     }
   } else {
     return "";
@@ -83,13 +108,6 @@ router.get("/:id", ensureAuth, async (req, res) => {
     if (!question) {
       return res.render("errors/404");
     }
-
-    // let replyAuthors = []
-    // question.replies.forEach(function(reply) {
-    //   let replyAuthor = await User.findById(reply.user);
-    //   replyAuthors.push(replyAuthor.displayName)
-    // })
-
     for (let index = 0; index < question.replies.length; index++) {
       user = await User.findById(question.replies[index].user);
       // console.log(user);
@@ -101,6 +119,8 @@ router.get("/:id", ensureAuth, async (req, res) => {
     res.render("questions/show", {
       question: question,
       currentUser: req.user,
+      editIcon: editIcon,
+      editCommentIcon: editCommentIcon,
     });
   } catch (err) {
     console.log(err);
@@ -108,7 +128,7 @@ router.get("/:id", ensureAuth, async (req, res) => {
 });
 
 // @desc    Show edit page
-// @route   GET /stories/edit/:id
+// @route   GET /questions/edit/:id
 router.get("/edit/:id", ensureAuth, async (req, res) => {
   try {
     const question = await Question.findOne({
@@ -117,7 +137,7 @@ router.get("/edit/:id", ensureAuth, async (req, res) => {
     if (!question) {
       res.render("errors/404");
     }
-    if (question.user != req.user.id) {
+    if (question.user != req.user.id && !req.user.isAdmin) {
       // console.log(question.user, req.user.id);
       res.redirect("/questions");
     } else {
@@ -130,6 +150,42 @@ router.get("/edit/:id", ensureAuth, async (req, res) => {
   }
 });
 
+// @desc    Edit comment
+// @route   GET /questions/edit/:id/comment/:commentId
+router.get(
+  "/edit/:questionId/comment/:commentId",
+  ensureAuth,
+  async (req, res) => {
+    try {
+      const question = await Question.findOne({
+        _id: req.params.questionId,
+      }).lean();
+      if (!question) {
+        res.render("errors/404");
+        return;
+      }
+      const replies = question.replies;
+      const comment = replies.find(
+        (reply) => reply._id == req.params.commentId
+      );
+      if (!comment) {
+        res.render("errors/404");
+      }
+      if (comment.user != req.user.id && !req.user.isAdmin) {
+        // console.log(question.user, req.user.id);
+        res.redirect("/questions");
+      } else {
+        res.render("questions/editComment", {
+          question: question,
+          comment: comment,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
 // @desc    Update question
 // @route   PUT /questions/:id
 router.put("/:id", ensureAuth, async (req, res) => {
@@ -139,13 +195,13 @@ router.put("/:id", ensureAuth, async (req, res) => {
     if (!question) {
       res.render("errors/404");
     }
-    if (question.user != req.user.id) {
+    if (question.user != req.user.id && !req.user.isAdmin) {
       res.redirect("/questions");
     } else {
       if (!req.body.mode) {
         req.body.mode = "normal";
       }
-      question = await Question.findOneAndUpdate(
+      await Question.findOneAndUpdate(
         {
           _id: req.params.id,
         },
@@ -162,8 +218,40 @@ router.put("/:id", ensureAuth, async (req, res) => {
   }
 });
 
+// @desc    Update comment
+// @route   PUT /questions/:questionId/comment/:commentId
+router.put("/:questionId/comment/:commentId", ensureAuth, async (req, res) => {
+  try {
+    let question = await Question.findById(req.params.questionId).lean();
+    if (!question) {
+      res.render("errors/404");
+    }
+    const replies = question.replies;
+    const comment = replies.find((reply) => reply._id == req.params.commentId);
+    if (!comment) {
+      res.render("errors/404");
+    }
+    if (comment.user != req.user.id && !req.user.isAdmin) {
+      res.redirect(`/questions/${req.params.questionId}`);
+    } else {
+      // console.log(req.body.body)
+      await Question.findOneAndUpdate(
+        { _id: req.params.questionId, "replies._id": req.params.commentId },
+        {
+          $set: {
+            "replies.$.body": req.body.body,
+          },
+        }
+      );
+      res.redirect(`/questions/${req.params.questionId}`);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 // @desc    Delete question
-// @route   DELETE /story/:id
+// @route   DELETE /question/:id
 router.delete("/:id", ensureAuth, async (req, res) => {
   try {
     await Question.findOneAndDelete({ _id: req.params.id });
@@ -172,6 +260,30 @@ router.delete("/:id", ensureAuth, async (req, res) => {
     console.log(err);
   }
 });
+
+// @desc    Delete comment
+// @route   DELETE /question/:questionId/comment/:commentId
+router.delete(
+  "/:questionId/comment/:commentId",
+  ensureAuth,
+  async (req, res) => {
+    try {
+      await Question.findOneAndUpdate(
+        { _id: req.params.questionId },
+        {
+          $pull: {
+            replies: {
+              _id: req.params.commentId,
+            },
+          },
+        }
+      );
+      res.redirect(`/questions/${req.params.questionId}`);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
 
 // @desc    User Questions
 // @route   GET /questions/user/:userId

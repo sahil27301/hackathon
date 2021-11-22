@@ -1,0 +1,33 @@
+<%- include("../partials/header") -%>
+
+    <h3>Edit Comment</h3>
+    <div class="row">
+        <form action="/questions/<%= question._id %>/comment/<%= comment._id %>" method="POST" class="col s12">
+            <input type="hidden" name="_method" value="PUT">
+
+            <div class="row">
+                <div class="input-field">
+                    <h5>Edit your comment:</h5>
+                    <textarea id="body" name="body"><%= comment.body %></textarea>
+                </div>
+            </div>
+
+            <div class="row right">
+                <button class="btn waves-effect waves-light" type="submit" name="action">Save
+                    <i class="fas fa-paper-plane right"></i>
+                </button>
+                <a href="/dashboard" class="btn red">Cancel <i class="far fa-times-circle right"></i></a>
+                <form action=""></form>
+
+                <form action="/questions/<%= question._id %>/comment/<%= comment._id %>" method="POST"
+                    class="inline-form">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button class="btn red" type="submit">
+                        Delete <i class="fas fa-trash right"></i>
+                    </button>
+                </form>
+            </div>
+        </form>
+    </div>
+
+    <%- include("../partials/footer") -%>
