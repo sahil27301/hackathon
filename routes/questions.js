@@ -14,7 +14,7 @@ const {
   editCommentIcon,
   stripTags,
   truncate,
-} = require("../controllers/Utils");
+} = require("../helpers/Utils");
 
 // @desc    Show add page
 // @route   GET /questions/add
