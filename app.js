@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const morgan = require("morgan");
@@ -20,20 +19,13 @@ connectDB();
 
 const app = express();
 
-// Logging
-if (process.env.NODE_ENV === "development") {
-  app.use(morgan("dev"));
-}
-
 // Date formatting
 var moment = require("moment");
 app.locals.moment = require("moment");
 
-const PORT = process.env.PORT || 3000;
-
 app.set("view engine", "ejs");
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -67,8 +59,8 @@ app.use("/", require("./routes/index"));
 app.use("/auth", require("./routes/auth"));
 app.use("/questions", require("./routes/questions"));
 
-app.listen(process.env.PORT || 3000, function () {
-  console.log(
-    `Server started with mode ${process.env.NODE_ENV} on port ${process.env.PORT}`
-  );
+const port = process.env.PORT || 3000;
+
+app.listen(port, function () {
+  console.log(`Server started on port ${port}`);
 });
