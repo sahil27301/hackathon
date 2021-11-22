@@ -7,6 +7,8 @@ const { ensureAuth } = require("../middleware/auth");
 const Question = require("../models/Question");
 const User = require("../models/User");
 
+const UserController = require("../controllers/UserController");
+
 editIcon = function (questionUser, loggedUser, questionId, floating = true) {
   if (
     questionUser._id.toString() == loggedUser._id.toString() ||
@@ -287,25 +289,7 @@ router.delete(
 
 // @desc    User Questions
 // @route   GET /questions/user/:userId
-router.get("/user/:userId", ensureAuth, async (req, res) => {
-  try {
-    const questions = await Question.find({
-      user: req.params.userId,
-      mode: "normal",
-    })
-      .populate("user")
-      .lean();
-    res.render("questions/user", {
-      questions: questions,
-      truncate: truncate,
-      stripTags: stripTags,
-      editIcon: editIcon,
-      currentUser: req.user,
-    });
-  } catch (err) {
-    console.log(err);
-  }
-});
+router.get("/user/:userId", ensureAuth, UserController.get);
 
 router.post("/:questionId", ensureAuth, async (req, res) => {
   try {
