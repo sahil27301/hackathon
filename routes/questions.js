@@ -7,7 +7,7 @@ const { ensureAuth } = require("../middleware/auth");
 const Question = require("../models/Question");
 const User = require("../models/User");
 
-const UserController = require("../controllers/UserController");
+const UserController = require("../controllers/User");
 
 const {
   editIcon,

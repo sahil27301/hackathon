@@ -1,6 +1,6 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("../models/User");
-const UserController = require("../controllers/UserController");
+const UserController = require("../controllers/User");
 
 module.exports = function (passport) {
   passport.use(
